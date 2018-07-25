@@ -2,10 +2,12 @@ import java.util.ArrayList;
 public class Node {
     private int[][] board;
     private int empty;
+    private int depth;
 
-    public Node(int[][] in, int e) {
+    public Node(int[][] in, int e, int d) {
         board = in;
         empty = e;
+        depth = d;
     }
 
     // true if human player, false if ai
@@ -22,7 +24,7 @@ public class Node {
     }
 
     //generate list of possible next moves
-    public static ArrayList<Node> aiMove(Node in) {
+    public static ArrayList<Node> getAIMove(Node in) {
         ArrayList<Node> next = new ArrayList<>();
         int[][] clone;
         //ArrayList<String> occ = new ArrayList<>();
@@ -35,56 +37,56 @@ public class Node {
                     if (i > 0 && in.board[i - 1][j] == 0) {
                         clone = in.copyBoard();
                         clone[i - 1][j] = 1;
-                        next.add(new Node(clone, in.empty));
+                        next.add(new Node(clone, in.empty,(in.depth+1)));
                     }
 
                     // add below
                     if (i < in.board.length - 1 && in.board[i + 1][j] == 0) {
                         clone = in.copyBoard();
                         clone[i + 1][j] = 1;
-                        next.add(new Node(clone, in.empty));
+                        next.add(new Node(clone, in.empty,(in.depth+1)));
                     }
 
                     // add left
                     if (j > 0 && in.board[i][j - 1] == 0) {
                         clone = in.copyBoard();
                         clone[i][j - 1] = 1;
-                        next.add(new Node(clone, in.empty));
+                        next.add(new Node(clone, in.empty,(in.depth+1)));
                     }
 
                     // add right
                     if (j < in.board.length - 1 && in.board[i][j + 1] == 0) {
                         clone = in.copyBoard();
                         clone[i][j + 1] = 1;
-                        next.add(new Node(clone, in.empty));
+                        next.add(new Node(clone, in.empty,(in.depth+1)));
                     }
 
                     // add upper left
                     if (i > 0 && j > 0 && in.board[i - 1][j - 1] == 0) {
                         clone = in.copyBoard();
                         clone[i-1][j-1] = 1;
-                        next.add(new Node(clone, in.empty));
+                        next.add(new Node(clone, in.empty,(in.depth+1)));
                     }
 
                         // add upper right
                     if (i > 0 && j < in.board.length - 1 && in.board[i - 1][j + 1] == 0) {
                         clone = in.copyBoard();
                         clone[i-1][j + 1] = 1;
-                        next.add(new Node(clone, in.empty));
+                        next.add(new Node(clone, in.empty,(in.depth+1)));
                     }
 
                     // add lower right
                     if (i < in.board.length - 1 && j < in.board.length - 1 && in.board[i + 1][j + 1] == 0) {
                         clone = in.copyBoard();
                         clone[i+1][j + 1] = 1;
-                        next.add(new Node(clone, in.empty));
+                        next.add(new Node(clone, in.empty,(in.depth+1)));
                     }
 
                     // add lower left
                     if (i < in.board.length - 1 && j > 0 && in.board[i + 1][j - 1] == 0) {
                         clone = in.copyBoard();
                         clone[i+1][j - 1] = 1;
-                        next.add(new Node(clone, in.empty));
+                        next.add(new Node(clone, in.empty,(in.depth+1)));
                     }
                 }
             }
@@ -124,6 +126,51 @@ public class Node {
                 }
             }
         }
+        return 0;
+    }
+
+    public int getEval(int player) {
+        int score = 0;
+        int x = 0, o = 0, buf = 0;
+        boolean iCont, jCont;
+        int[][] b = this.board;
+
+        // check for number of rows of matching elements that are equal to search depth
+        for(int i=0; i<b.length; i++) {
+            for(int j=0; j<b[i].length-this.depth; j++) {
+                buf = b[i][j];
+                jCont = true;
+                for(int k=1; k<this.depth; k++) {
+                    if(buf == b[i][j+k]) continue;
+                    else jCont = false;
+                }
+
+                if(jCont == true) {
+                    if(buf == 1) x++;
+                    if(buf == -1) o++;
+                }
+            }
+        }
+
+        // check for number of columns of matching elements that are equal to search depth
+        for(int i=0; i<b.length-this.depth; i++) {
+            for(int j=0; j<b.length; j++) {
+                buf = b[i][j];
+                iCont = true;
+                for(int k=1; k<this.depth; k++) {
+                    if(buf == b[i+k][j]) continue;
+                    else iCont = false;
+                }
+
+                if(iCont == true) {
+                    if(buf == 1) x++;
+                    if(buf == -1) o++;
+                }
+            }
+        }
+
+        if(player == 1) return x;
+        if(player == -1) return o;
         return 0;
     }
 
