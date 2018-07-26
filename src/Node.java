@@ -93,7 +93,7 @@ public class Node {
         if(board[x][y]!=0) return false;
 
         empty--;
-        depth++;
+        //depth++;
         board[x][y] = 1;
 
         xEval = this.getX();
