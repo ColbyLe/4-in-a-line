@@ -17,7 +17,7 @@ public class Game {
             // get player move
             boolean valid = false;
             if(player) {
-                while(valid = false) {
+                while(valid == false) {
                     System.out.print("Enter move (ex: a6): ");
                     String m = kb.nextLine();
                     if(m.length()>2 || Character.toLowerCase(m.charAt(0)) > 'h' || Character.toLowerCase(m.charAt(0)) < 'a' || m.charAt(1) > '8' || m.charAt(1) < '1') {
@@ -28,12 +28,15 @@ public class Game {
                         valid = true;
                         game.move(m);
                     }
+                    continue;
                 }
                 game.printBoard();
                 if(game.getWinner() == 1) {
                     System.out.println("You win!");
                     break;
                 }
+                player = false;
+                continue;
             }
 
             else {
@@ -44,12 +47,14 @@ public class Game {
                     System.out.println("You lose.");
                     break;
                 }
+                player = true;
             }
         }
 
     }
 
     private static Node aBSearch(Node n) {
+        //if(n.getEmpty() == 64) return Node.getAIMoveO(n).poll();
         int v = maxValue(n, Integer.MIN_VALUE, Integer.MAX_VALUE, 0);
         PriorityQueue<Node> next = Node.getAIMoveO(n);
         Node s = next.poll();

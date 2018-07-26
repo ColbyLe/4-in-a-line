@@ -96,6 +96,9 @@ public class Node {
         depth++;
         board[x][y] = 1;
 
+        xEval = this.getX();
+        oEval = this.getO();
+
         return true;
     }
 
@@ -205,56 +208,56 @@ public class Node {
                     // add above
                     if (i > 0 && in.board[i - 1][j] == 0) {
                         clone = in.copyBoard();
-                        clone[i - 1][j] = 1;
+                        clone[i - 1][j] = -1;
                         next.add(new Node(clone, in.empty-1,(in.depth+1)));
                     }
 
                     // add below
                     if (i < in.board.length - 1 && in.board[i + 1][j] == 0) {
                         clone = in.copyBoard();
-                        clone[i + 1][j] = 1;
+                        clone[i + 1][j] = -1;
                         next.add(new Node(clone, in.empty-1,(in.depth+1)));
                     }
 
                     // add left
                     if (j > 0 && in.board[i][j - 1] == 0) {
                         clone = in.copyBoard();
-                        clone[i][j - 1] = 1;
+                        clone[i][j - 1] = -1;
                         next.add(new Node(clone, in.empty-1,(in.depth+1)));
                     }
 
                     // add right
                     if (j < in.board.length - 1 && in.board[i][j + 1] == 0) {
                         clone = in.copyBoard();
-                        clone[i][j + 1] = 1;
+                        clone[i][j + 1] = -1;
                         next.add(new Node(clone, in.empty-1,(in.depth+1)));
                     }
 
                     // add upper left
                     if (i > 0 && j > 0 && in.board[i - 1][j - 1] == 0) {
                         clone = in.copyBoard();
-                        clone[i-1][j-1] = 1;
+                        clone[i-1][j-1] = -1;
                         next.add(new Node(clone, in.empty-1,(in.depth+1)));
                     }
 
                     // add upper right
                     if (i > 0 && j < in.board.length - 1 && in.board[i - 1][j + 1] == 0) {
                         clone = in.copyBoard();
-                        clone[i-1][j + 1] = 1;
+                        clone[i-1][j + 1] = -1;
                         next.add(new Node(clone, in.empty-1,(in.depth+1)));
                     }
 
                     // add lower right
                     if (i < in.board.length - 1 && j < in.board.length - 1 && in.board[i + 1][j + 1] == 0) {
                         clone = in.copyBoard();
-                        clone[i+1][j + 1] = 1;
+                        clone[i+1][j + 1] = -1;
                         next.add(new Node(clone, in.empty-1,(in.depth+1)));
                     }
 
                     // add lower left
                     if (i < in.board.length - 1 && j > 0 && in.board[i + 1][j - 1] == 0) {
                         clone = in.copyBoard();
-                        clone[i+1][j - 1] = 1;
+                        clone[i+1][j - 1] = -1;
                         next.add(new Node(clone, in.empty-1,(in.depth+1)));
                     }
                 }
@@ -270,11 +273,13 @@ public class Node {
 
         // check rows
         for(int x = j; x<j+4; x++) {
+            if(x == 8) break;
             if(board[i][x] != player) row = false;
         }
 
         // check columns
         for(int x = i; x<i+4; x++) {
+            if(x == 8) break;
             if(board[x][j] != player) col = false;
         }
 
@@ -361,7 +366,7 @@ public class Node {
 
     public void printBoard() {
         char row = 'a';
-        System.out.println("  1 2 3 4 5 6 7 8");
+        System.out.println("\n  1 2 3 4 5 6 7 8");
         for(int i=0; i<board.length; i++) {
             System.out.print("" + row++ + " ");
             for(int j=0; j<board.length; j++) {
@@ -371,6 +376,7 @@ public class Node {
             }
             System.out.println();
         }
+        System.out.println();
     }
 
 
